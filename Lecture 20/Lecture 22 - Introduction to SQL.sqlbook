@@ -33,6 +33,7 @@ panel on the left:
 
 Delete existing table
 -- SQLBook: Code
+-- Active: 1745102342217@@127.0.0.1@5432@postgres
 -- Active: 1710903290079@@127.0.0.1@5432@postgres
 -- If the table already exists we can drop it:
 -- If it doesn't exist nothing happens
@@ -49,10 +50,11 @@ Create empty table from codebook
 -- Create empty TABLE called "drivers"
 -- This example has five arguments separated by a comma
 -- that contain the "column_name" and "column_type", respectively
+-- Numbers next to varchar (vairbal length text),  maximum length of text
 
 CREATE TABLE drivers(
     driver_id int,
-    driver_name varchar(30),
+    driver_name varchar(30), 
     nationality varchar(15),
     victories int
 );    
@@ -98,7 +100,9 @@ Try it yourself!
 -- Make sure to deparate arguments by a semicolon!
 
 
+INSERT INTO drivers VALUES (5, 'Sally Choi', 'Korean', 105)
 
+INSERT INTO drivers VALUES (6, 'Amanda Middleton', 'American', 105)
 
 
 -- SQLBook: Markup
@@ -199,6 +203,7 @@ Groupby + Aggregate
 -- SQLBook: Code
 -- This command computes summary statistics by nationalitySELECT COUNT(*) AS num_rows,
 -- Including "nationality" (the grouping column) is optional in the select
+-- Group statistics table
 SELECT nationality,
        SUM(victories) AS sum_victories,
        AVG(victories) AS mean_victories,
@@ -213,8 +218,9 @@ Subsetting **after** aggregating
 -- SQLBook: Code
 -- This command computes the same table as above
 -- then filters with HAVING
--- HAVING is the command you use to subset *after* aggregating
+-- HAVING is the command you use to subset *after* aggregating (filter after grouping)
 -- This differs from WHERE which is use to subset *before* aggregating
+-- Filtering after aggregating for the nationality where sum fo victories for each nationality is less than 50. 
 
 SELECT nationality,
        SUM(victories) AS sum_victories,
