@@ -13,6 +13,7 @@ You need to run "Execute" on each row, line-by-line. This is <br>
 different from Python, which runs the entire chunk.
 
 -- SQLBook: Code
+-- Active: 1745102342217@@127.0.0.1@5432@postgres
 -- Active: 1710903290079@@127.0.0.1@5432@postgres
 
 DROP TABLE IF EXISTS homework_data;
@@ -59,9 +60,15 @@ Hints:
 - In SQL you only need a single equality "="
 - In SQL use single quotes for logical conditions with strings '...'
 -- SQLBook: Code
+-- Active: 1745102342217@@127.0.0.1@5432@postgres
 -- Active: 1710903290079@@127.0.0.1@5432@postgres@public
--- Write your own code
 
+SELECT *
+FROM homework_data
+WHERE nationality = 'British'
+ORDER BY driver_name ASC;
+-- SQLBook: Markup
+The result contains three British drivers in this order: Henry Louvre, Lewis Hamilton, and Simon Cowell.
 
 
 -- SQLBook: Markup
@@ -79,10 +86,15 @@ alies, e.g. ``` ... AS ... ```
 
 
 -- SQLBook: Code
+-- Active: 1745102342217@@127.0.0.1@5432@postgres
 -- Active: 1710903290079@@127.0.0.1@5432@postgres@public
--- Write your own code
 
+SELECT COUNT(DISTINCT nationality) AS num_nationalities,
+       COUNT(*) AS num_rows
+FROM homework_data;
 
+-- SQLBook: Markup
+There are 3 unique nationalities and 10 rows in the table. (not present in the executed code but the three nationalities are British, Spanish, and German). 
 
 
 -- SQLBook: Markup
@@ -97,8 +109,17 @@ alies, e.g. ``` ... AS ... ```
 
 
 -- SQLBook: Code
+-- Active: 1745102342217@@127.0.0.1@5432@postgres
 -- Active: 1710903290079@@127.0.0.1@5432@postgres@public
--- Write your own code
+
+SELECT driver_id,
+       AVG(lap_times) AS mean_lap_times
+FROM homework_data
+GROUP BY driver_id
+ORDER BY mean_lap_times ASC;
+
+-- SQLBook: Markup
+The mean lap times range from 11 for driver 9 to 103 for driver 5, sorted from lowest to highest. Each driver has only one row, so each average equals that driver’s recorded lap time.
 
 
 
@@ -118,8 +139,17 @@ HINT: Use ```HAVING SUM(lap_times)``` rather than an alias <br>
 for the code to work correctly.
 
 -- SQLBook: Code
+-- Active: 1745102342217@@127.0.0.1@5432@postgres
 
-# Write your own code
+SELECT nationality,
+       SUM(lap_times) AS total_lap_times
+FROM homework_data
+GROUP BY nationality
+HAVING SUM(lap_times) > 150
+ORDER BY total_lap_times ASC;
+
+-- SQLBook: Markup
+British drivers have a total lap time of 209 and German drivers have a total of 261. Both exceed 150, but the Spanish total doesn't sum to 150 so it is excluded.
 
 
 
@@ -144,8 +174,22 @@ $\qquad$ <img src="figures/codebook_lap_times.png" alt="drawing" width="350"/>
 HINT: To insert a string value, use 'single quotations'
 
 -- SQLBook: Code
--- Write your own code
 
+DROP TABLE IF EXISTS lap_times;
 
+CREATE TABLE lap_times (
+    "raceId" int,
+    "driverId" int,
+    lap int,
+    position int,
+    time varchar(255),
+    milliseconds int);
+
+-- Invented lap time: 1 minute 25.123 seconds = 85123 milliseconds.
+INSERT INTO lap_times ("raceId", "driverId", lap, position, time, milliseconds)
+VALUES (1, 5, 1, 2, '1:25.123', 85123);
+
+-- SQLBook: Markup
+I created the lap_times table with the six specified columns and insert one invented row. The row records driver 5 in race 1, on lap 1 in position 2, with a time of 1:25.123 (85,123 milliseconds).
 
 
